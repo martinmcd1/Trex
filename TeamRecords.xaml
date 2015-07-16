@@ -1,0 +1,137 @@
+﻿<UserControl x:Class="TrexV2.TeamRecords"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:TrexV2.ViewModels"
+             d:DataContext="{d:DesignInstance viewModels:TeamRecordsViewModel}"
+             mc:Ignorable="d"
+              Height="502.667">
+    <UserControl.Resources>
+        <Style x:Key="EntryFieldStyle" TargetType="{x:Type Button}">
+            <Setter Property="IsEnabled" Value="True" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Text, ElementName=TheTextBox}" Value="">
+                    <Setter Property="IsEnabled" Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <ControlTemplate x:Key="ErrorTemplate">
+            <DockPanel LastChildFill="True">
+                <Border BorderBrush="Red" BorderThickness="1">
+                    <AdornedElementPlaceholder />
+                </Border>
+            </DockPanel>
+        </ControlTemplate>
+
+
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="TextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"></Setter>
+        </Style>
+
+
+    </UserControl.Resources>
+    <Grid Margin="21,-26,20,9.667">
+        <TextBlock Text="Live Support:"
+                   HorizontalAlignment="Left"
+                   Margin="5,259,0,0"
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Top"
+                   Style="{StaticResource TextStyle}"/>
+        <TextBlock Text="Start: "
+                   HorizontalAlignment="Left"
+                   Margin="352,262,0,0"
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Top"
+                   Style="{StaticResource TextStyle}"/>
+        <TextBlock Text="End:"
+                   HorizontalAlignment="Left"
+                   Margin="480,259,0,0"
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Top" 
+                   Style="{StaticResource TextStyle}"/>
+        <ComboBox DisplayMemberPath="LiveSupport" Height="23" HorizontalAlignment="Left"
+                  ItemsSource="{Binding LiveSupport, Mode=TwoWay}"
+                  Margin="89,259,0,0"
+                  SelectedItem="{Binding SelectedSupport, Mode=TwoWay}"
+                  VerticalAlignment="Top"
+                  Width="195" />
+        <TextBox HorizontalAlignment="Left"
+                 Height="23" Margin="407,259,0,0"
+                 TextWrapping="Wrap"
+                 Text="{Binding StartTime,ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=LostFocus, ValidatesOnExceptions=True}"
+                 Validation.ErrorTemplate="{StaticResource ErrorTemplate}"
+                 VerticalAlignment="Top"
+                 Width="56"
+                 MaxLength="5" />
+        <TextBox HorizontalAlignment="Left"
+                 Height="23"
+                 Margin="511,259,0,0"
+                 TextWrapping="Wrap"
+                 Text="{Binding EndTime,ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=LostFocus, ValidatesOnExceptions=True}"
+                 Validation.ErrorTemplate="{StaticResource ErrorTemplate}"
+                 VerticalAlignment="Top"
+                 Width="56"
+                 MaxLength="5" />
+        <StackPanel Margin="-2,296,10,99">
+            <TextBox x:Name="TheTextBox"
+                     IsEnabled="{Binding TextIsEnabled}"
+                     Text="{Binding SupportText, Mode=TwoWay}"
+                     Height="85"
+                     RenderTransformOrigin="0.5,0.5" Margin="0,0,-0.667,0" />
+            <Button Content="Submit" Command="{Binding SubmitData}" Style="{StaticResource EntryFieldStyle}" />
+
+
+        </StackPanel>
+        <DataGrid
+                  Margin="-3,32,9.667,0"
+                  VerticalAlignment="Top"
+
+                  Height="222"
+                  ColumnWidth="120"
+                  ColumnHeaderStyle="{StaticResource HeaderStyle}"
+                  CanUserResizeColumns="False"
+                  HorizontalScrollBarVisibility="Disabled"
+                  AutoGenerateColumns="False"
+                  ItemsSource="{Binding ShowRecords}">
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Label Content="Support Description: " />
+                        <Label Content="{Binding SupportDesc}" />
+                    </DockPanel>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Pid"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Pid}" />
+                <DataGridTextColumn Header="Support Type"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Support}" />
+                <DataGridTextColumn Header="Start"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Start}" />
+                <DataGridTextColumn Header="End"
+                                    IsReadOnly="True"
+                                    Binding="{Binding End}" />
+                <DataGridTextColumn Header="Total"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Total}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+    </Grid>
+</UserControl>
